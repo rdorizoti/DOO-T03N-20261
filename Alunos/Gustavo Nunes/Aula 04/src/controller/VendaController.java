@@ -1,49 +1,36 @@
 package controller;
 
-import model.Venda;
+import Entities.Venda;
+import io.VendaIO;
 import service.VendaService;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class VendaController {
 
-    private Scanner scanner = new Scanner(System.in);
-
     // onde serão armazenadas as vendas
     private  ArrayList<Venda> vendas = new ArrayList<>();
+    private VendaIO io;
+    private VendaService service;
 
-    // o que move o programa
+    public VendaController(VendaIO io, VendaService service) {
+        this.io = io;
+        this.service = service;
+    }
+
+    // Fluxo do programa
     public void iniciar() {
 
         int op;
 
         do {
-            op = mostraMenu();
-            processaOp(op);
-        } while (op != 6);
-
-        scanner.close();
-    }
-
-    // Mostra menu ao usuário
-    private int mostraMenu() {
-
-        System.out.printf("\n==========================================================================\n" +
-                "[1] - Cadastrar nova Venda\n" +
-                "[2] - Listar vendas cadastradas\n" +
-                "[3] - Apenas calcular preço\n" +
-                "[4] - Apenas calcular troco\n" +
-                "[5] - Apenas calcular desconto\n" +
-                "[6] - Sair\n" +
-                "==========================================================================\n" +
-                "Entre com a opção : ");
-
-        return scanner.nextInt();
+            op = io.mostraMenuInicio();
+            processaOpInicio(op);
+        } while (op != 4);
     }
 
     // direciona usuário para opção escolhida
-    private void processaOp(int op) {
+    private void processaOpInicio(int op) {
 
         switch (op){
 
@@ -52,43 +39,110 @@ public class VendaController {
                 break;
 
             case 2:
-                listaCompras();
+               // mostraOpListagem();
                 break;
 
             case 3:
-                calculaPreco();
+                mostraOpCalculo();
                 break;
 
             case 4:
-                calculaTroco();
-                break;
-
-            case 5:
-                calculaDesconto();
-                break;
-
-            case 6:
-                System.out.println("\nSAINDO...");
+                io.exibeSaida();
                 break;
 
             default:
-                System.out.println("\nOpção inválida! Tente novamente!");
+                io.exibeOpInvalida();
+                break;
+        }
+    }
+
+    // menu de listagem
+    private void mostraOpListagem(){
+        int op;
+
+        do {
+            op = io.mostraMenuListagem();
+            processaOpListagem(op);
+
+        } while (op != 6);
+    }
+
+    // direciona usuário para opção escolhida
+    private void processaOpListagem(int op) {
+
+        switch (op){
+
+            case 1:
+                break;
+
+            case 2:
+                break;
+
+            case 3:
+                break;
+
+            case 4:
+                break;
+
+            case 5:
+                break;
+
+            case 6:
+                break;
+
+            default:
+                io.exibeOpInvalida();
+                break;
+        }
+    }
+
+    // Menu de cálculo
+    private void mostraOpCalculo(){
+        int op;
+
+        do {
+            op = io.mostraMenuCalculo();
+            processaOpCalculo(op);
+
+        } while (op != 4);
+    }
+
+    // direciona usuário para opção escolhida
+    private void processaOpCalculo(int op) {
+
+        switch (op){
+
+            case 1:
+                calculaPreco();
+                break;
+
+            case 2:
+                calculaTroco();
+                break;
+
+            case 3:
+                calculaDesconto();
+                break;
+
+            case 4:
+                break;
+
+            default:
+                io.exibeOpInvalida();
                 break;
         }
     }
 
     // Cadastra nova compra
     private void cadastraVenda() {
-        System.out.println("\nQuntidade: ");
-        int quant = scanner.nextInt();
-        System.out.println("\nValor unitário: ");
-        double valUni = scanner.nextDouble();
+        int quant = io.pedeQundidade();
+        double valUni = io.pedeValor();
 
-        double valVenda = VendaService.calculaPreco(quant,valUni);
-        double desconto = VendaService.calculaDesconto(quant,valVenda);
-        vendas.add(VendaService.cadastraVenda(quant,valVenda,desconto));
+        double valVenda = service.calculaPreco(quant,valUni);
+        double desconto = service.calculaDesconto(quant,valVenda);
+        vendas.add(service.cadastraVenda(quant,valVenda,desconto));
 
-        System.out.println("venda cadastrada com sucesso!");
+        io.exibeSucessoCadastro();
     }
 
     // Lista compras realizadas
@@ -113,45 +167,41 @@ public class VendaController {
 
     }
 
+    // Mostra menu de Cálculo
+
     // Calculo do Preço
     private void calculaPreco() {
 
-        System.out.println("\nQuntidade: ");
-        int quant = scanner.nextInt();
-        System.out.println("\nValor unitário: ");
-        double valUni = scanner.nextDouble();
+        int quant = io.pedeQundidade();
+        double valUni = io.pedeValor();
 
-        double preco = VendaService.calculaPreco(quant,valUni);
+        double preco = service.calculaPreco(quant,valUni);
 
-        System.out.printf("\nPreço = R$%.2f",preco);
+        io.mostraResultadoVenda(preco);
 
     }
 
     // Calculo do troco
     private void calculaTroco() {
 
-        System.out.println("\nValor pago: ");
-        double valPag = scanner.nextDouble();
-        System.out.println("\nValor devido: ");
-        double valDev = scanner.nextDouble();
+        double valPag = io.pedeValorPago();
+        double valDev = io.pedeValorDevido();
 
-        double troco = VendaService.calculaTroco(valPag,valDev);
+        double troco = service.calculaTroco(valPag,valDev);
 
-        System.out.printf("\nTroco = R$%.2f",troco);
+        io.mostraResultadoTroco(troco);
 
     }
 
     // calcula desconto
     private void calculaDesconto(){
 
-        System.out.println("\nQuntidade: ");
-        int quant = scanner.nextInt();
-        System.out.println("\nValor Total: ");
-        double valTot = scanner.nextDouble();
+        int quant = io.pedeQundidade();
+        double valTot = io.pedeValorTotal();
 
-        double desconto = VendaService.calculaDesconto(quant, valTot);
+        double desconto = service.calculaDesconto(quant, valTot);
 
-        System.out.printf("\nDesconto = R$%.2f",desconto);
+        io.mostraResultadoDesconto(desconto);
     }
 
 }

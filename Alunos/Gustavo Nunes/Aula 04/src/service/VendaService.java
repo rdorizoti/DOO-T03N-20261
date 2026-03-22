@@ -1,21 +1,20 @@
 package service;
 
-import model.Venda;
+import Entities.Venda;
 
 public class VendaService {
+    private static final double TAXA_DESCONTO = 0.05;
+    private static final int LIMITE_DESCONTO = 10;
 
     // Retorna preço
-    public static double calculaPreco(int quant, double valUni) {
+    public double calculaPreco(int quant, double valUni) {
 
         return quant * valUni;
 
     }
 
     // Retorna valor do desconto se aplicavel
-    private static final double TAXA_DESCONTO = 0.05;
-    private static final int LIMITE_DESCONTO = 10;
-
-    public static double calculaDesconto(int quantidade, double valTot) {
+    public double calculaDesconto(int quantidade, double valTot) {
 
         if (quantidade > LIMITE_DESCONTO){
             return valTot * TAXA_DESCONTO;
@@ -24,14 +23,14 @@ public class VendaService {
     }
 
     // Retorna troco
-    public static double calculaTroco(double valPag, double valDev) {
+    public double calculaTroco(double valPag, double valDev) {
 
         return valPag - valDev;
 
     }
 
     // Retorna cadastro da venda
-    public static Venda cadastraVenda(int quant, double valVen, double desconto){
+    public Venda cadastraVenda(int quant, double valVen, double desconto){
 
         return new Venda(quant, valVen, desconto);
     }
