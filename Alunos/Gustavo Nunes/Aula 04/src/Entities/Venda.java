@@ -10,9 +10,9 @@ public class Venda {
     private double desconto;
     private double valFin;
     private LocalDate dataVenda;
-
+    
     // Builder
-    public Venda(int quant, double valVen, double desconto){
+    public Venda(int quant, double valVen, double desconto) {
         this.id = contId++; // Gera id
         this.quant = quant;
         this.valVen = valVen;
@@ -20,20 +20,20 @@ public class Venda {
         this.valFin = valVen - desconto;
         this.dataVenda = LocalDate.now();
     }
-
+    
     // Getters
     public int getYear() {
         return dataVenda.getYear();
     }
-
+    
     public int getMonth() {
         return dataVenda.getMonthValue();
     }
-
+    
     public int getDay() {
         return dataVenda.getDayOfMonth();
     }
-
+    
     // To String
     @Override
     public String toString() {
