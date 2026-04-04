@@ -57,7 +57,7 @@ public class Planta {
 
     public String toString() {
 
-         DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
         return "| Data: " + dataVenda.format(formato) +
                " / Planta: " + nome +
